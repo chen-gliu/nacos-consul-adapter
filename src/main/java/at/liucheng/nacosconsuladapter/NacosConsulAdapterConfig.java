@@ -24,7 +24,6 @@ import org.springframework.context.annotation.Bean;
  * @createTime:2021/6/3 21:25
  */
 @EnableConfigurationProperties({NacosConsulAdapterProperties.class})
-//@EnableConfigurationProperties
 @Slf4j
 public class NacosConsulAdapterConfig {
     @Bean

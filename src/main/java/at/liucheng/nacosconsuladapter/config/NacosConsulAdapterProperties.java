@@ -1,6 +1,7 @@
 package at.liucheng.nacosconsuladapter.config;
 
 import ch.qos.logback.core.util.TimeUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import javax.annotation.PostConstruct;
@@ -15,12 +16,17 @@ import java.util.concurrent.TimeUnit;
 public class NacosConsulAdapterProperties {
     private Long DEFAULT_INTERVAL_MILLS = TimeUnit.SECONDS.toMillis(5);
     private Long serviceNameIntervalMills = DEFAULT_INTERVAL_MILLS;
+    private String DEFAULT_MODE = "long-polling";
+    private String mode;
 
     @PostConstruct
     public void init() throws Exception {
 
         if (Objects.isNull(serviceNameIntervalMills)) {
             serviceNameIntervalMills = DEFAULT_INTERVAL_MILLS;
+        }
+        if (mode == null) {
+            mode = DEFAULT_MODE;
         }
     }
 
