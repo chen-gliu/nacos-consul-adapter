@@ -18,6 +18,7 @@ public class NacosConsulAdapterProperties {
 
     @PostConstruct
     public void init() throws Exception {
+
         if (Objects.isNull(serviceNameIntervalMills)) {
             serviceNameIntervalMills = DEFAULT_INTERVAL_MILLS;
         }
