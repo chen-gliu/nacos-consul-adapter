@@ -3,11 +3,11 @@
 在Eureka的适配实现中作者使用的是Rx-Java,本系统是使用Reactor3实现和Spring Cloud GateWay的技术栈一致。
 只前也有Nacos Consul Adapter的实现在GitHub开源，但是由于Consul在某个版本修改了健康检测接口的路径，所以在高版本的Prometheus就无法使用了。之前的版本也未提供长轮询实现。
 
-特性
+####### 特性
 项目一共只有三个接口：
-/v1/agent/self：返回数据中心的名称。这个接口暂时返回固定内容，未提供配置。
-/v1/catalog/services：返回注册中心所有服务名称。
-/v1/catalog/service/{service}：返回指定名称服务的所有实例。
+1./v1/agent/self：返回数据中心的名称。这个接口暂时返回固定内容，未提供配置。
+2./v1/catalog/services：返回注册中心所有服务名称。
+3./v1/catalog/service/{service}：返回指定名称服务的所有实例。
 
 
 本项目提供两种模式请求接口：直接查询和长轮询。
@@ -16,11 +16,11 @@
 
 可以将本项目引入到Spring Cloud GateWay,在Prometheus中指定网关地址。
 
-配置选项
+####### 配置选项
 nacos-consul-adapter.mode：使用模式。direct：直接查询，long-polling：长轮询。默认为长轮询。
 nacos-consul-adapter.serviceNameIntervalMills:在长轮询模式下，请求服务名称的间隔时间。  
 
-要求
+####### 要求
 
 JDK 1.8+
 spring-cloud-starter-alibaba-nacos-discovery 2.2+
