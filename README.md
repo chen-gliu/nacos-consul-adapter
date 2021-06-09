@@ -22,3 +22,5 @@
 JDK 1.8+  
 spring-cloud-starter-alibaba-nacos-discovery 2.2+  
 spring-boot 2.3+  
+
+目前还处于开发状态。。
