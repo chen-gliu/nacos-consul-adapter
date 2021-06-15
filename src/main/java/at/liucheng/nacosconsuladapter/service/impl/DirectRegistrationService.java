@@ -1,10 +1,12 @@
 package at.liucheng.nacosconsuladapter.service.impl;
 
+import at.liucheng.nacosconsuladapter.config.NacosConsulAdapterProperties;
 import at.liucheng.nacosconsuladapter.model.Result;
 import at.liucheng.nacosconsuladapter.model.ServiceInstancesHealth;
 import at.liucheng.nacosconsuladapter.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.ReactiveDiscoveryClient;
 import org.springframework.stereotype.Service;

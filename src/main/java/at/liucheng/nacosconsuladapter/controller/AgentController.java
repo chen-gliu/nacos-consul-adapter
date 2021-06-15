@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-@RestController
 public class AgentController {
 
     public static final String DATE_CENTER_CONF = "{\n" +

@@ -24,7 +24,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Controller
 @Slf4j
 @RequiredArgsConstructor
 public class ServiceController {
