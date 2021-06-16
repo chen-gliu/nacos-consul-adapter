@@ -1,4 +1,4 @@
-package at.liucheng.nacosconsuladapter.controller;
+package io.github.chengliu.nacosconsuladapter.controller;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;

@@ -1,14 +1,7 @@
-package at.liucheng.nacosconsuladapter.config;
+package io.github.chengliu.nacosconsuladapter.config;
 
-import at.liucheng.nacosconsuladapter.NacosConsulAdapterConfig;
-import at.liucheng.nacosconsuladapter.service.RegistrationService;
-import ch.qos.logback.core.util.TimeUtil;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import javax.annotation.PostConstruct;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**

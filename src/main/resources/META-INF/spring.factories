@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-at.liucheng.nacosconsuladapter.NacosConsulAdapterConfig
+io.github.chengliu.nacosconsuladapter.NacosConsulAdapterConfig

@@ -1,10 +1,8 @@
-package at.liucheng.nacosconsuladapter.service;
+package io.github.chengliu.nacosconsuladapter.service;
 
 
-import at.liucheng.nacosconsuladapter.config.NacosConsulAdapterProperties;
-import at.liucheng.nacosconsuladapter.model.Result;
-import at.liucheng.nacosconsuladapter.model.ServiceInstancesHealth;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import io.github.chengliu.nacosconsuladapter.model.Result;
+import io.github.chengliu.nacosconsuladapter.model.ServiceInstancesHealth;
 import reactor.core.publisher.Mono;
 
 import java.util.List;

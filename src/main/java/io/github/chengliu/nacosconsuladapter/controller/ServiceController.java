@@ -1,11 +1,10 @@
-package at.liucheng.nacosconsuladapter.controller;
+package io.github.chengliu.nacosconsuladapter.controller;
 
-import at.liucheng.nacosconsuladapter.model.Result;
-import at.liucheng.nacosconsuladapter.model.ServiceInstancesHealth;
-import at.liucheng.nacosconsuladapter.service.RegistrationService;
+import io.github.chengliu.nacosconsuladapter.model.Result;
+import io.github.chengliu.nacosconsuladapter.model.ServiceInstancesHealth;
+import io.github.chengliu.nacosconsuladapter.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

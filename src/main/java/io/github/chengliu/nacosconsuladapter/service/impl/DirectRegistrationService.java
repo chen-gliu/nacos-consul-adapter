@@ -1,8 +1,8 @@
-package at.liucheng.nacosconsuladapter.service.impl;
+package io.github.chengliu.nacosconsuladapter.service.impl;
 
-import at.liucheng.nacosconsuladapter.model.Result;
-import at.liucheng.nacosconsuladapter.model.ServiceInstancesHealth;
-import at.liucheng.nacosconsuladapter.service.RegistrationService;
+import io.github.chengliu.nacosconsuladapter.model.Result;
+import io.github.chengliu.nacosconsuladapter.model.ServiceInstancesHealth;
+import io.github.chengliu.nacosconsuladapter.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.discovery.ReactiveDiscoveryClient;

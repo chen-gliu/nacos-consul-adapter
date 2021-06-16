@@ -1,4 +1,4 @@
-package at.liucheng.nacosconsuladapter.model;
+package io.github.chengliu.nacosconsuladapter.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

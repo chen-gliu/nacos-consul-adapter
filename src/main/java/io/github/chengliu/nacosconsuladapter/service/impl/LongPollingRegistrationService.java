@@ -1,10 +1,10 @@
-package at.liucheng.nacosconsuladapter.service.impl;
+package io.github.chengliu.nacosconsuladapter.service.impl;
 
-import at.liucheng.nacosconsuladapter.config.NacosConsulAdapterProperties;
-import at.liucheng.nacosconsuladapter.model.Result;
-import at.liucheng.nacosconsuladapter.model.ServiceInstancesHealth;
-import at.liucheng.nacosconsuladapter.service.RegistrationService;
-import at.liucheng.nacosconsuladapter.utils.NacosServiceCenter;
+import io.github.chengliu.nacosconsuladapter.config.NacosConsulAdapterProperties;
+import io.github.chengliu.nacosconsuladapter.model.Result;
+import io.github.chengliu.nacosconsuladapter.model.ServiceInstancesHealth;
+import io.github.chengliu.nacosconsuladapter.service.RegistrationService;
+import io.github.chengliu.nacosconsuladapter.utils.NacosServiceCenter;
 import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
 import com.alibaba.cloud.nacos.NacosServiceManager;
 import com.alibaba.nacos.client.naming.NacosNamingService;
@@ -12,13 +12,10 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.cloud.client.discovery.ReactiveDiscoveryClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.time.Duration;
 import java.util.*;

@@ -1,15 +1,10 @@
-package at.liucheng.nacosconsuladapter.utils;
+package io.github.chengliu.nacosconsuladapter.utils;
 
-import at.liucheng.nacosconsuladapter.listeners.ServiceChangeListener;
-import at.liucheng.nacosconsuladapter.model.Result;
-import com.alibaba.nacos.api.config.listener.Listener;
+import io.github.chengliu.nacosconsuladapter.listeners.ServiceChangeListener;
+import io.github.chengliu.nacosconsuladapter.model.Result;
 import com.alibaba.nacos.api.exception.NacosException;
-import com.alibaba.nacos.api.naming.listener.Event;
 import com.alibaba.nacos.api.naming.listener.EventListener;
-import com.alibaba.nacos.api.naming.listener.NamingEvent;
-import com.alibaba.nacos.api.naming.pojo.Instance;
 import com.alibaba.nacos.client.naming.NacosNamingService;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.Disposable;
 import reactor.core.publisher.EmitterProcessor;
@@ -18,8 +13,6 @@ import reactor.core.publisher.Flux;
 import javax.annotation.PreDestroy;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.StampedLock;
