@@ -4,15 +4,19 @@ import at.liucheng.nacosconsuladapter.utils.NacosServiceCenter;
 import com.alibaba.nacos.api.naming.listener.Event;
 import com.alibaba.nacos.api.naming.listener.EventListener;
 import com.alibaba.nacos.api.naming.listener.NamingEvent;
+import com.alibaba.nacos.api.naming.utils.NamingUtils;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
 /**
- * @description
  * @author lc
+ * @description
  * @createDate 2021/5/29
  */
+@Slf4j
 public class ServiceChangeListener implements EventListener {
     private NacosServiceCenter nacosServiceCenter;
     private String serviceName;
@@ -26,7 +30,8 @@ public class ServiceChangeListener implements EventListener {
     public void onEvent(Event event) {
         if (event instanceof NamingEvent) {
             NamingEvent namingEvent = (NamingEvent) event;
-            nacosServiceCenter.publish(namingEvent.getServiceName());
+            log.debug("receive {} service change event.", ((NamingEvent) event).getServiceName());
+            nacosServiceCenter.publish(NamingUtils.getServiceName(namingEvent.getServiceName()));
         }
     }
 

@@ -18,6 +18,8 @@ import org.springframework.cloud.client.discovery.ReactiveDiscoveryClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.*;
@@ -76,6 +78,7 @@ public class LongPollingRegistrationService implements RegistrationService, Appl
         Long version = nacosServiceCenter.getServiceVersion(serviceName);
         //如果index和现在的version不同（只有可能是index 小于version）,说明服务发生了变动马上返回。
         if (index == null || !index.equals(version)) {
+            log.debug("{} had changed,direct return.", serviceName);
             return Mono.just(new Result<List<ServiceInstancesHealth>>(getServiceInstance(serviceName), version));
         }
         return nacosServiceCenter.getChangeHotSource(serviceName)
@@ -84,7 +87,13 @@ public class LongPollingRegistrationService implements RegistrationService, Appl
                 .take(1)
                 .collectList()
                 .map(newVersionList -> {
-                    return new Result<List<ServiceInstancesHealth>>(getServiceInstance(serviceName), newVersionList.get(0));
+                    Long newVersion = newVersionList.get(0);
+                    if (!version.equals(newVersion)) {
+                        log.debug("during long-polling,{} had changed.version is {}", serviceName, newVersion);
+                    } else {
+                        log.debug("during long-polling,{} not changed.version is {}", serviceName, newVersion);
+                    }
+                    return new Result<List<ServiceInstancesHealth>>(getServiceInstance(serviceName), newVersion);
                 });
     }
 
@@ -114,6 +123,13 @@ public class LongPollingRegistrationService implements RegistrationService, Appl
         this.executorService.scheduleWithFixedDelay(() -> {
             nacosServiceCenter.setServiceNames(discoveryClient.getServices());
         }, 0, nacosConsulAdapterProperties.getServiceNameIntervalMills(), TimeUnit.MILLISECONDS);
+
+    }
+
+    @PreDestroy
+    public void shutdown() {
+
+        executorService.shutdownNow();
     }
 
 

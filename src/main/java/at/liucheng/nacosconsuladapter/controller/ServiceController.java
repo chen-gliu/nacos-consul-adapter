@@ -1,6 +1,7 @@
 package at.liucheng.nacosconsuladapter.controller;
 
 import at.liucheng.nacosconsuladapter.model.Result;
+import at.liucheng.nacosconsuladapter.model.ServiceInstancesHealth;
 import at.liucheng.nacosconsuladapter.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ import java.util.regex.Pattern;
 
 @Slf4j
 @RequiredArgsConstructor
+@Controller
 public class ServiceController {
 
     private static final String CONSUL_IDX_HEADER = "X-Consul-Index";
@@ -48,11 +50,11 @@ public class ServiceController {
     }
 
     @GetMapping(value = "/v1/health/service/{appName}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<ResponseEntity<List<Map<String, Object>>>> getService(@PathVariable("appName") String appName,
-                                                                      @RequestParam(name = QUERY_PARAM_WAIT, required = false) String wait,
-                                                                      @RequestParam(name = QUERY_PARAM_INDEX, required = false) Long index) {
+    public Mono<ResponseEntity<List<ServiceInstancesHealth>>> getService(@PathVariable("appName") String appName,
+                                                                          @RequestParam(name = QUERY_PARAM_WAIT, required = false) String wait,
+                                                                          @RequestParam(name = QUERY_PARAM_INDEX, required = false) Long index) {
         Assert.isTrue(appName != null, "service name can not be null");
-        log.debug("请求注册中心服务器：{}", appName);
+        log.debug("请求注册中心服务器：{}，wait:{},index:{}", appName,wait,index);
         return registrationService.getServiceInstancesHealth(appName, getWaitMillis(wait), index).map(item -> {
             return createResponseEntity(item);
         });

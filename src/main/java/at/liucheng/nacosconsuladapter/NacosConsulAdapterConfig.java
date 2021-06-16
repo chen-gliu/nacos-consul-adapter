@@ -10,6 +10,7 @@ import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
 import com.alibaba.cloud.nacos.NacosServiceManager;
 import com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -36,23 +37,34 @@ public class NacosConsulAdapterConfig {
         return new NacosConsulAdapterProperties();
     }
 
-    @Bean
-    @ConditionalOnProperty(
-            value = {"nacos-consul-adapter.mode"}, havingValue = "direct"
-    )
-    public RegistrationService directRegistrationService(ReactiveDiscoveryClient reactiveDiscoveryClient) {
-        log.info("创建直接的请求bean");
-        return new DirectRegistrationService(reactiveDiscoveryClient);
-    }
+//    @Bean
+//    @ConditionalOnProperty(
+//            value = "nacos-consul-adapter.mode", havingValue = "direct"
+//    )
+//    public RegistrationService directRegistrationService(ReactiveDiscoveryClient reactiveDiscoveryClient) {
+//        log.info("创建直接的请求bean");
+//        return new DirectRegistrationService(reactiveDiscoveryClient);
+//    }
 
+
+    //    @Bean
+//    @ConditionalOnProperty(name = "nacos-consul-adapter.mode", havingValue = "long-polling")
+//    public RegistrationService longPollingRegistrationService(NacosConsulAdapterProperties nacosConsulAdapterProperties,
+//                                                              DiscoveryClient discoveryClient, NacosServiceManager nacosServiceManager,
+//                                                              NacosDiscoveryProperties nacosDiscoveryProperties) {
+//
+//        log.info("创建长轮询的请求bean");
+//        return new LongPollingRegistrationService(nacosConsulAdapterProperties, discoveryClient, nacosServiceManager, nacosDiscoveryProperties);
+//    }
     @Bean
-    @ConditionalOnProperty(
-            value = {"nacos-consul-adapter.mode"}, havingValue = "long-polling"
-    )
-    public RegistrationService longPollingRegistrationService(NacosConsulAdapterProperties nacosConsulAdapterProperties,
-                                                              DiscoveryClient discoveryClient, NacosServiceManager nacosServiceManager,
-                                                              NacosDiscoveryProperties nacosDiscoveryProperties) {
-        log.info("创建长轮询的请求bean");
+    public RegistrationService registrationService(NacosConsulAdapterProperties nacosConsulAdapterProperties,
+                                                   DiscoveryClient discoveryClient, NacosServiceManager nacosServiceManager,
+                                                   NacosDiscoveryProperties nacosDiscoveryProperties, ReactiveDiscoveryClient reactiveDiscoveryClient) {
+        if (NacosConsulAdapterProperties.DIRECT_MODE.equals(nacosConsulAdapterProperties.getMode())) {
+            log.info("使用直接查询模式");
+            return new DirectRegistrationService(reactiveDiscoveryClient);
+        }
+        log.info("使用长轮询模式");
         return new LongPollingRegistrationService(nacosConsulAdapterProperties, discoveryClient, nacosServiceManager, nacosDiscoveryProperties);
     }
 

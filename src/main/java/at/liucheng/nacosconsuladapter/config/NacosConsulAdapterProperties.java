@@ -19,7 +19,9 @@ import java.util.concurrent.TimeUnit;
 public class NacosConsulAdapterProperties {
     private Long DEFAULT_INTERVAL_MILLS = TimeUnit.SECONDS.toMillis(5);
     private Long serviceNameIntervalMills = DEFAULT_INTERVAL_MILLS;
-    public static String DEFAULT_MODE = "long-polling";
+    public static String LONG_POLLING_MODE = "long-polling";
+    public static String DIRECT_MODE = "direct";
+    public static String DEFAULT_MODE = LONG_POLLING_MODE;
     private String mode = DEFAULT_MODE;
 
 //    @PostConstruct

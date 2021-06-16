@@ -15,6 +15,7 @@ import reactor.core.Disposable;
 import reactor.core.publisher.EmitterProcessor;
 import reactor.core.publisher.Flux;
 
+import javax.annotation.PreDestroy;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -48,7 +49,7 @@ public class NacosServiceCenter {
     private EmitterProcessor<Result<String>> emitterProcessor = EmitterProcessor.create(3, true);
 
     /**
-     * 消费所有热数据源数据消费者
+     * 消费所有热数据源数据消费者,仅用于打印日志
      */
     Disposable allChangeConsumer = null;
 
@@ -65,6 +66,7 @@ public class NacosServiceCenter {
     public Set<String> getServiceNames() {
         long stamp = stampedLock.tryReadLock();
         if (stamp <= 0) {
+            log.debug("未抢占到读锁，返回备份");
             return backServices;
         }
         try {
@@ -73,7 +75,6 @@ public class NacosServiceCenter {
             stampedLock.unlockRead(stamp);
         }
     }
-
 
 
     //todo 这个方法应该启动的时候自动调用
@@ -107,7 +108,7 @@ public class NacosServiceCenter {
         }
         try {
             //加锁
-            if (services.containsAll(newServiceNameList)) {
+            if (services.containsAll(newServiceNameList) && newServiceNameList.contains(services)) {
                 log.debug("服务未发生变化无需进行修改");
                 return;
             }
@@ -182,7 +183,9 @@ public class NacosServiceCenter {
     /**
      * 销毁方法
      */
+    @PreDestroy
     public void destroy() {
+        log.debug("destroy allChangeConsumer");
         allChangeConsumer.dispose();
     }
 }
