@@ -66,10 +66,11 @@ public class NacosServiceCenter {
     public Set<String> getServiceNames() {
         long stamp = stampedLock.tryReadLock();
         if (stamp <= 0) {
-            log.debug("未抢占到读锁，返回备份");
+            log.debug("未抢占到读锁，返回备份数据。");
             return backServices;
         }
         try {
+            log.debug("抢占到读锁，返回真实数据");
             return services;
         } finally {
             stampedLock.unlockRead(stamp);
@@ -108,10 +109,12 @@ public class NacosServiceCenter {
         }
         try {
             //加锁
-            if (services.containsAll(newServiceNameList) && newServiceNameList.contains(services)) {
+            if (services.containsAll(newServiceNameList) && newServiceNameList.containsAll(services)) {
                 log.debug("服务未发生变化无需进行修改");
                 return;
             }
+
+
             //订阅新增加的服务/取消订阅下线的服务
             backServices = services;
             long stamp = stampedLock.writeLock();
