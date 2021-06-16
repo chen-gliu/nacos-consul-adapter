@@ -113,8 +113,6 @@ public class NacosServiceCenter {
                 log.debug("服务未发生变化无需进行修改");
                 return;
             }
-
-
             //订阅新增加的服务/取消订阅下线的服务
             backServices = services;
             long stamp = stampedLock.writeLock();
