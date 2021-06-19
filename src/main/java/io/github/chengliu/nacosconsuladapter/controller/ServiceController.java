@@ -61,6 +61,12 @@ public class ServiceController {
 
     private final RegistrationService registrationService;
 
+    /**
+     * 获取所有服务名称
+     * @param wait 超时时间
+     * @param index 版本号
+     * @return
+     */
     @GetMapping(value = "/v1/catalog/services", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<Map<String, List<String>>>> getServiceNames(
             @RequestParam(name = QUERY_PARAM_WAIT, required = false) String wait,
@@ -70,12 +76,19 @@ public class ServiceController {
                 .map(item -> createResponseEntity(item));
     }
 
+    /**
+     * 获取指定服务实例情况
+     * @param appName 执行服务名称
+     * @param wait 超时时间
+     * @param index 版本号
+     * @return
+     */
     @GetMapping(value = "/v1/health/service/{appName}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<List<ServiceInstancesHealth>>> getService(@PathVariable("appName") String appName,
-                                                                          @RequestParam(name = QUERY_PARAM_WAIT, required = false) String wait,
-                                                                          @RequestParam(name = QUERY_PARAM_INDEX, required = false) Long index) {
+                                                                         @RequestParam(name = QUERY_PARAM_WAIT, required = false) String wait,
+                                                                         @RequestParam(name = QUERY_PARAM_INDEX, required = false) Long index) {
         Assert.isTrue(appName != null, "service name can not be null");
-        log.debug("请求注册中心服务器：{}，wait:{},index:{}", appName,wait,index);
+        log.debug("请求注册中心服务器：{}，wait:{},index:{}", appName, wait, index);
         return registrationService.getServiceInstancesHealth(appName, getWaitMillis(wait), index).map(item -> {
             return createResponseEntity(item);
         });

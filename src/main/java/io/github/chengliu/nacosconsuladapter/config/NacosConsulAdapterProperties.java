@@ -27,6 +27,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.concurrent.TimeUnit;
 
 /**
+ *
  * @author lc
  * @createTime 2021/6/1 9:58
  */

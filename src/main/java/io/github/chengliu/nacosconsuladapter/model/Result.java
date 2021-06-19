@@ -31,6 +31,7 @@ import lombok.Getter;
  * @author lc
  * @Date 2021-6-1
  */
+
 @Getter
 @AllArgsConstructor
 public class Result<T> {
