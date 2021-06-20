@@ -1,24 +1,40 @@
-package at.liucheng.nacosconsuladapter.utils;
+/**
+ * The MIT License
+ * Copyright © 2021 liu cheng
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package io.github.chengliu.nacosconsuladapter.utils;
 
-import at.liucheng.nacosconsuladapter.listeners.ServiceChangeListener;
-import at.liucheng.nacosconsuladapter.model.Result;
-import com.alibaba.nacos.api.config.listener.Listener;
+import io.github.chengliu.nacosconsuladapter.listeners.ServiceChangeListener;
+import io.github.chengliu.nacosconsuladapter.model.Result;
 import com.alibaba.nacos.api.exception.NacosException;
-import com.alibaba.nacos.api.naming.listener.Event;
 import com.alibaba.nacos.api.naming.listener.EventListener;
-import com.alibaba.nacos.api.naming.listener.NamingEvent;
-import com.alibaba.nacos.api.naming.pojo.Instance;
 import com.alibaba.nacos.client.naming.NacosNamingService;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.Disposable;
 import reactor.core.publisher.EmitterProcessor;
 import reactor.core.publisher.Flux;
 
+import javax.annotation.PreDestroy;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.StampedLock;
@@ -48,7 +64,7 @@ public class NacosServiceCenter {
     private EmitterProcessor<Result<String>> emitterProcessor = EmitterProcessor.create(3, true);
 
     /**
-     * 消费所有热数据源数据消费者
+     * 消费所有热数据源数据消费者,仅用于打印日志
      */
     Disposable allChangeConsumer = null;
 
@@ -65,15 +81,16 @@ public class NacosServiceCenter {
     public Set<String> getServiceNames() {
         long stamp = stampedLock.tryReadLock();
         if (stamp <= 0) {
+            log.debug("未抢占到读锁，返回备份数据。");
             return backServices;
         }
         try {
+            log.debug("抢占到读锁，返回真实数据");
             return services;
         } finally {
             stampedLock.unlockRead(stamp);
         }
     }
-
 
 
     //todo 这个方法应该启动的时候自动调用
@@ -107,7 +124,7 @@ public class NacosServiceCenter {
         }
         try {
             //加锁
-            if (services.containsAll(newServiceNameList)) {
+            if (services.containsAll(newServiceNameList) && newServiceNameList.containsAll(services)) {
                 log.debug("服务未发生变化无需进行修改");
                 return;
             }
@@ -182,7 +199,9 @@ public class NacosServiceCenter {
     /**
      * 销毁方法
      */
+    @PreDestroy
     public void destroy() {
+        log.debug("destroy allChangeConsumer");
         allChangeConsumer.dispose();
     }
 }

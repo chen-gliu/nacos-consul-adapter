@@ -7,9 +7,10 @@
 2. /v1/catalog/services：返回注册中心所有服务名称。
 3. /v1/catalog/service/{service}：返回指定名称服务的所有实例。
 
-本项目提供两种模式请求接口：直接查询和长轮询。  
-*直接查询：*Prometheus调用本项目，本项目直接请求Nacos服务端获取内容。  
-*长轮询：*本项目使用Reactor3来实现长轮询，在指定的等待时间内如果注册信息发生变化会立即返回否则会一直等待直到指定时间流逝。在这种模式下不会直接调用Nacos服务器，而是请求的本地Nacos客户端的内容。  
+##长轮询和直接查询
+本项目提供两种模式请求接口：`直接查询和长轮询`  
+*直接查询：* Prometheus调用本项目，本项目直接请求Nacos服务端获取内容。  
+*长轮询：* 本项目使用Reactor3来实现长轮询，在指定的等待时间内如果注册信息发生变化会立即返回否则会一直等待直到指定时间流逝。在这种模式下不会直接调用Nacos服务器，而是请求的本地Nacos客户端的内容。  
 
 可以将本项目引入到Spring Cloud GateWay,在Prometheus中指定网关地址。  
 
@@ -23,4 +24,11 @@ JDK 1.8+
 spring-cloud-starter-alibaba-nacos-discovery 2.2+  
 spring-boot 2.3+  
 
-目前还处于开发状态。。
+较低版本Spring Boot未做测试
+
+##感谢  
+感谢<a href='https://github.com/twinformatics/eureka-consul-adapter'>Eureka Consul Adapter</a>项目开发人员，项目中部分代码借鉴了<a href='https://github.com/twinformatics/eureka-consul-adapter'>Eureka Consul Adapter</a>的实现。
+
+
+##TODO  
+快速开始

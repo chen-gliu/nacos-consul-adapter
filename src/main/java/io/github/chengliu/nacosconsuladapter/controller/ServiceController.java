@@ -1,10 +1,32 @@
-package at.liucheng.nacosconsuladapter.controller;
+/**
+ * The MIT License
+ * Copyright © 2021 liu cheng
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package io.github.chengliu.nacosconsuladapter.controller;
 
-import at.liucheng.nacosconsuladapter.model.Result;
-import at.liucheng.nacosconsuladapter.service.RegistrationService;
+import io.github.chengliu.nacosconsuladapter.model.Result;
+import io.github.chengliu.nacosconsuladapter.model.ServiceInstancesHealth;
+import io.github.chengliu.nacosconsuladapter.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +48,7 @@ import java.util.regex.Pattern;
 
 @Slf4j
 @RequiredArgsConstructor
+@Controller
 public class ServiceController {
 
     private static final String CONSUL_IDX_HEADER = "X-Consul-Index";
@@ -38,6 +61,12 @@ public class ServiceController {
 
     private final RegistrationService registrationService;
 
+    /**
+     * 获取所有服务名称
+     * @param wait 超时时间
+     * @param index 版本号
+     * @return
+     */
     @GetMapping(value = "/v1/catalog/services", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<Map<String, List<String>>>> getServiceNames(
             @RequestParam(name = QUERY_PARAM_WAIT, required = false) String wait,
@@ -47,12 +76,19 @@ public class ServiceController {
                 .map(item -> createResponseEntity(item));
     }
 
+    /**
+     * 获取指定服务实例情况
+     * @param appName 执行服务名称
+     * @param wait 超时时间
+     * @param index 版本号
+     * @return
+     */
     @GetMapping(value = "/v1/health/service/{appName}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<ResponseEntity<List<Map<String, Object>>>> getService(@PathVariable("appName") String appName,
-                                                                      @RequestParam(name = QUERY_PARAM_WAIT, required = false) String wait,
-                                                                      @RequestParam(name = QUERY_PARAM_INDEX, required = false) Long index) {
+    public Mono<ResponseEntity<List<ServiceInstancesHealth>>> getService(@PathVariable("appName") String appName,
+                                                                         @RequestParam(name = QUERY_PARAM_WAIT, required = false) String wait,
+                                                                         @RequestParam(name = QUERY_PARAM_INDEX, required = false) Long index) {
         Assert.isTrue(appName != null, "service name can not be null");
-        log.debug("请求注册中心服务器：{}", appName);
+        log.debug("请求注册中心服务器：{}，wait:{},index:{}", appName, wait, index);
         return registrationService.getServiceInstancesHealth(appName, getWaitMillis(wait), index).map(item -> {
             return createResponseEntity(item);
         });
