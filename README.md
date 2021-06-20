@@ -6,6 +6,7 @@
 1. /v1/agent/self：返回数据中心的名称。这个接口暂时返回固定内容，未提供配置。
 2. /v1/catalog/services：返回注册中心所有服务名称。
 3. /v1/catalog/service/{service}：返回指定名称服务的所有实例。
+现在只支持比较新的Prometheus版本，后期会兼容早期的Prometheus版本。
 
 ##长轮询和直接查询
 本项目提供两种模式请求接口：`直接查询和长轮询`  
@@ -26,9 +27,26 @@ spring-boot 2.3+
 
 较低版本Spring Boot未做测试
 
-##感谢  
+
+
+## 快速开始
+``` 
+        <dependency>
+            <groupId>io.github.chen-gliu</groupId>
+            <artifactId>nacos-consul-adapter</artifactId>
+            <version>0.0.2.M</version>
+        </dependency> 
+``` 
+如果拉取不到项目，可以在setting文件中添加如下配置:
+```$xslt
+      <mirror>
+		<id>mvnrepository</id>
+		<mirrorOf>*</mirrorOf>
+		<name>仓库</name>
+		<url>https://repo1.maven.org/maven2</url>
+	</mirror>
+```
+
+## 感谢  
 感谢<a href='https://github.com/twinformatics/eureka-consul-adapter'>Eureka Consul Adapter</a>项目开发人员，项目中部分代码借鉴了<a href='https://github.com/twinformatics/eureka-consul-adapter'>Eureka Consul Adapter</a>的实现。
 
-
-##TODO  
-快速开始
