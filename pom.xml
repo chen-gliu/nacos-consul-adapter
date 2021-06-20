@@ -10,7 +10,7 @@
     </parent>
     <groupId>io.github.chen-gliu</groupId>
     <artifactId>nacos-consul-adapter</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2.M</version>
     <name>nacos-consul-adapter</name>
     <url>https://github.com/chen-gliu/nacos-consul-adapter</url>
     <description>适配nacos使用promethues consul</description>
