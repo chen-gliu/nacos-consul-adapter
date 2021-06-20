@@ -35,7 +35,7 @@ spring-boot 2.3+
         <dependency>
             <groupId>io.github.chen-gliu</groupId>
             <artifactId>nacos-consul-adapter</artifactId>
-            <version>0.0.2.M</version>
+            <version>0.0.3.M</version>
         </dependency> 
 ``` 
 如果拉取不到项目，可以在setting文件中添加如下配置:
