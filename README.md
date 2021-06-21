@@ -30,7 +30,8 @@ spring-boot 2.3+
 
 
 
-## 快速开始
+## 快速开始  
+可以在Spring Cloud Gateway中引入下面的jar包，然后在Prometheus中配置Spring Cloud Gateway的一个实例的ip地址就可以了。
 ``` 
         <dependency>
             <groupId>io.github.chen-gliu</groupId>
