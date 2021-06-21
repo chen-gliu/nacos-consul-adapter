@@ -48,7 +48,14 @@ spring-boot 2.3+
 		<url>https://repo1.maven.org/maven2</url>
 	</mirror>
 ```
-
+在Prometheus中添加如下配置:  
+```
+ - job_name: 'consul-prometheus-test'
+    metrics_path: '/actuator/prometheus'
+    consul_sd_configs:
+    - server: 引入nacos-consul-adapter实例的ip+端口
+      services: []
+```
 ## 感谢  
 感谢<a href='https://github.com/twinformatics/eureka-consul-adapter'>Eureka Consul Adapter</a>项目开发人员，项目中部分代码借鉴了<a href='https://github.com/twinformatics/eureka-consul-adapter'>Eureka Consul Adapter</a>的实现。
 
