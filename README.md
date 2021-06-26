@@ -31,14 +31,15 @@ spring-boot 2.3+
 
 
 ## 快速开始  
-可以在Spring Cloud Gateway中引入下面的jar包，然后在Prometheus中配置Spring Cloud Gateway的一个实例的ip地址就可以了。
-``` 
+可以在Spring Cloud Gateway中引入下面的jar包（可以是服务中任意的节点，在Spring Cloud Gateway中原因是，它基于Reactor。如果不是使用Spring WebFlux则还需要引入额外的包），然后在Prometheus中配置Spring Cloud Gateway的一个实例的ip地址就可以了。
+项目的开源地址为：https://github.com/chen-gliu/nacos-consul-adapter。对本项目有任何问题和优化建议都可以提issue。
+```
         <dependency>
             <groupId>io.github.chen-gliu</groupId>
             <artifactId>nacos-consul-adapter</artifactId>
             <version>0.0.3.M</version>
         </dependency> 
-``` 
+```
 如果拉取不到项目，可以在setting文件中添加如下配置:
 ```$xslt
       <mirror>
@@ -56,6 +57,23 @@ spring-boot 2.3+
     - server: 引入nacos-consul-adapter实例的ip+端口
       services: []
 ```
+在每个Spring Cloud实例中引入Prometheus监控包：
+```
+ <dependency>
+       <groupId>io.micrometer</groupId>
+       <artifactId>micrometer-registry-prometheus</artifactId>
+  </dependency>
+```
+```java
+@Bean
+    MeterRegistryCustomizer<MeterRegistry> configurer(
+            @Value("${spring.application.name}") String applicationName) {
+        return (registry) -> registry.config().commonTags("application", applicationName);
+    }
+```
+这样简单的配置后，启动服务就可以在Prometheus中看到注册在Nacos中的服务了。
+![Prometheus实际效果图](https://img-blog.csdnimg.cn/20210626171800141.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0xDQlVTSElIQUhB,size_16,color_FFFFFF,t_70)
+![Grafana实际效果图](https://img-blog.csdnimg.cn/20210626172040746.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0xDQlVTSElIQUhB,size_16,color_FFFFFF,t_70)
 ## 感谢  
 感谢<a href='https://github.com/twinformatics/eureka-consul-adapter'>Eureka Consul Adapter</a>项目开发人员，项目中部分代码借鉴了<a href='https://github.com/twinformatics/eureka-consul-adapter'>Eureka Consul Adapter</a>的实现。
 
