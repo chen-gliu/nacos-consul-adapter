@@ -40,18 +40,6 @@ public class NacosConsulAdapterProperties {
     public static String DEFAULT_MODE = LONG_POLLING_MODE;
     private String mode = DEFAULT_MODE;
 
-//    @PostConstruct
-//    public void init() throws Exception {
-//
-//        if (Objects.isNull(serviceNameIntervalMills)) {
-//            serviceNameIntervalMills = DEFAULT_INTERVAL_MILLS;
-//        }
-//        if (mode == null) {
-//            mode = DEFAULT_MODE;
-//        }
-//    }
-
-
     public void setServiceNameIntervalMills(Long serviceNameIntervalMills) {
         this.serviceNameIntervalMills = serviceNameIntervalMills;
     }

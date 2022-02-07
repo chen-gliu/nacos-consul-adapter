@@ -1,17 +1,17 @@
 /**
  * The MIT License
  * Copyright © 2021 liu cheng
- *
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * <p>
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,6 +22,7 @@
  */
 package io.github.chengliu.nacosconsuladapter.utils;
 
+import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
 import io.github.chengliu.nacosconsuladapter.listeners.ServiceChangeListener;
 import io.github.chengliu.nacosconsuladapter.model.Result;
 import com.alibaba.nacos.api.exception.NacosException;
@@ -54,6 +55,7 @@ public class NacosServiceCenter {
     private Set<String> backServices = null;
     private ReentrantLock writeServiceLock = new ReentrantLock();
     private NacosNamingService nacosNamingService;
+    private NacosDiscoveryProperties nacosDiscoveryProperties;
     //todo 定义一个listener,监听服务变更通知
     /**
      * 定义一个所有服务的变更版本记录
@@ -69,8 +71,9 @@ public class NacosServiceCenter {
     Disposable allChangeConsumer = null;
 
 
-    public NacosServiceCenter(NacosNamingService nacosNamingService) {
+    public NacosServiceCenter(NacosNamingService nacosNamingService, NacosDiscoveryProperties nacosDiscoveryProperties) {
         this.nacosNamingService = nacosNamingService;
+        this.nacosDiscoveryProperties = nacosDiscoveryProperties;
     }
 
     /**
@@ -168,7 +171,7 @@ public class NacosServiceCenter {
 
     private void subscribe(String serviceName, EventListener listener) {
         try {
-            nacosNamingService.subscribe(serviceName, listener);
+            nacosNamingService.subscribe(serviceName, nacosDiscoveryProperties.getGroup(), listener);
             log.debug("subscribe new service: {}", serviceName);
         } catch (NacosException e) {
             log.error("{} subscribe nacos fail.fail message:{}", serviceName, e.getErrMsg());

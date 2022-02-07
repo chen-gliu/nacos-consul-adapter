@@ -43,7 +43,7 @@ public class AgentController {
     @GetMapping(value = "/v1/agent/self", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getNodes() {
-        //todo这里先暂时写死
+        //todo 这里先暂时写死
         return DATE_CENTER_CONF;
     }
 }

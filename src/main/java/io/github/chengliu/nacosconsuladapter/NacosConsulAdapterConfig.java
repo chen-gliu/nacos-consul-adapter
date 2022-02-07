@@ -53,25 +53,7 @@ public class NacosConsulAdapterConfig {
         return new NacosConsulAdapterProperties();
     }
 
-//    @Bean
-//    @ConditionalOnProperty(
-//            value = "nacos-consul-adapter.mode", havingValue = "direct"
-//    )
-//    public RegistrationService directRegistrationService(ReactiveDiscoveryClient reactiveDiscoveryClient) {
-//        log.info("创建直接的请求bean");
-//        return new DirectRegistrationService(reactiveDiscoveryClient);
-//    }
 
-
-    //    @Bean
-//    @ConditionalOnProperty(name = "nacos-consul-adapter.mode", havingValue = "long-polling")
-//    public RegistrationService longPollingRegistrationService(NacosConsulAdapterProperties nacosConsulAdapterProperties,
-//                                                              DiscoveryClient discoveryClient, NacosServiceManager nacosServiceManager,
-//                                                              NacosDiscoveryProperties nacosDiscoveryProperties) {
-//
-//        log.info("创建长轮询的请求bean");
-//        return new LongPollingRegistrationService(nacosConsulAdapterProperties, discoveryClient, nacosServiceManager, nacosDiscoveryProperties);
-//    }
     @Bean
     public RegistrationService registrationService(NacosConsulAdapterProperties nacosConsulAdapterProperties,
                                                    DiscoveryClient discoveryClient, NacosServiceManager nacosServiceManager,
