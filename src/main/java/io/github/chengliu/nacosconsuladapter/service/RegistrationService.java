@@ -25,6 +25,7 @@ package io.github.chengliu.nacosconsuladapter.service;
 
 import io.github.chengliu.nacosconsuladapter.model.Result;
 import io.github.chengliu.nacosconsuladapter.model.ServiceInstancesHealth;
+import io.github.chengliu.nacosconsuladapter.model.ServiceInstancesHealthOld;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -55,5 +56,14 @@ public interface RegistrationService {
      * @return
      */
     Mono<Result<List<ServiceInstancesHealth>>> getServiceInstancesHealth(String serviceName, long waitMillis, Long index);
+
+    /**
+     * 获取指定服务所有实例 老版
+     * @param serviceName
+     * @param waitMillis
+     * @param index
+     * @return
+     */
+    Mono<Result<List<ServiceInstancesHealthOld>>> getServiceInstancesHealthOld(String serviceName, long waitMillis, Long index);
 
 }

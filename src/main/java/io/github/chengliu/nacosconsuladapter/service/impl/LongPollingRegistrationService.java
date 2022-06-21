@@ -1,17 +1,17 @@
 /**
  * The MIT License
  * Copyright © 2021 liu cheng
- *
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * <p>
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,6 +25,7 @@ package io.github.chengliu.nacosconsuladapter.service.impl;
 import io.github.chengliu.nacosconsuladapter.config.NacosConsulAdapterProperties;
 import io.github.chengliu.nacosconsuladapter.model.Result;
 import io.github.chengliu.nacosconsuladapter.model.ServiceInstancesHealth;
+import io.github.chengliu.nacosconsuladapter.model.ServiceInstancesHealthOld;
 import io.github.chengliu.nacosconsuladapter.service.RegistrationService;
 import io.github.chengliu.nacosconsuladapter.utils.NacosServiceCenter;
 import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
@@ -116,9 +117,34 @@ public class LongPollingRegistrationService implements RegistrationService, Appl
                 });
     }
 
+
+    @Override
+    public Mono<Result<List<ServiceInstancesHealthOld>>> getServiceInstancesHealthOld(String serviceName, long waitMillis, Long index) {
+        Long version = nacosServiceCenter.getServiceVersion(serviceName);
+        //如果index和现在的version不同（只有可能是index 小于version）,说明服务发生了变动马上返回。
+        if (index == null || !index.equals(version)) {
+            log.debug("{} had changed,direct return.", serviceName);
+            return Mono.just(new Result<>(getServiceInstanceOld(serviceName), version));
+        }
+        return nacosServiceCenter.getChangeHotSource(serviceName)
+                .map(result -> result.getChangeIndex())
+                .timeout(Duration.ofMillis(waitMillis), Flux.just(version))
+                .take(1)
+                .collectList()
+                .map(newVersionList -> {
+                    Long newVersion = newVersionList.get(0);
+                    if (!version.equals(newVersion)) {
+                        log.debug("during long-polling,{} had changed.version is {}", serviceName, newVersion);
+                    } else {
+                        log.debug("during long-polling,{} not changed.version is {}", serviceName, newVersion);
+                    }
+                    return new Result<>(getServiceInstanceOld(serviceName), newVersion);
+                });
+    }
+
     @SneakyThrows
     private List<ServiceInstancesHealth> getServiceInstance(String serviceName) {
-        return namingService.selectInstances(serviceName, nacosDiscoveryProperties.getGroup(),true).stream().map(instance -> {
+        return namingService.selectInstances(serviceName, nacosDiscoveryProperties.getGroup(), true).stream().map(instance -> {
             ServiceInstancesHealth.Node node = ServiceInstancesHealth.Node.builder()
                     .address(instance.getIp())
                     .id(instance.getInstanceId())
@@ -132,6 +158,26 @@ public class LongPollingRegistrationService implements RegistrationService, Appl
                     .build();
             return ServiceInstancesHealth.builder().node(node).service(service).build();
         }).collect(Collectors.toList());
+    }
+
+
+    @SneakyThrows
+    private List<ServiceInstancesHealthOld> getServiceInstanceOld(String serviceName) {
+        return namingService.selectInstances(serviceName, nacosDiscoveryProperties.getGroup(), true).stream().map(instance -> {
+                    ServiceInstancesHealth.Node node = ServiceInstancesHealth.Node.builder()
+                            .address(instance.getIp())
+                            .id(instance.getInstanceId())
+                            //todo 数据中心
+                            .dataCenter("dc1")
+                            .build();
+                    ServiceInstancesHealth.Service service = ServiceInstancesHealth.Service.builder()
+                            .service(serviceName)
+                            .id(serviceName + "-" + instance.getPort())
+                            .port(instance.getPort())
+                            .build();
+                    return ServiceInstancesHealth.builder().node(node).service(service).build();
+                }).map(serviceInstancesHealth -> new ServiceInstancesHealthOld(serviceInstancesHealth))
+                .collect(Collectors.toList());
     }
 
     @Override

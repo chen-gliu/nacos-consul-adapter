@@ -1,17 +1,17 @@
 /**
  * The MIT License
  * Copyright © 2021 liu cheng
- *
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * <p>
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,6 +24,7 @@ package io.github.chengliu.nacosconsuladapter.controller;
 
 import io.github.chengliu.nacosconsuladapter.model.Result;
 import io.github.chengliu.nacosconsuladapter.model.ServiceInstancesHealth;
+import io.github.chengliu.nacosconsuladapter.model.ServiceInstancesHealthOld;
 import io.github.chengliu.nacosconsuladapter.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -102,12 +103,12 @@ public class ServiceController {
      * @return
      */
     @GetMapping(value = "/v1/catalog/service/{appName}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<ResponseEntity<List<ServiceInstancesHealth>>> oldGetService(@PathVariable("appName") String appName,
-                                                                         @RequestParam(name = QUERY_PARAM_WAIT, required = false) String wait,
-                                                                         @RequestParam(name = QUERY_PARAM_INDEX, required = false) Long index) {
+    public Mono<ResponseEntity<List<ServiceInstancesHealthOld>>> oldGetService(@PathVariable("appName") String appName,
+                                                                               @RequestParam(name = QUERY_PARAM_WAIT, required = false) String wait,
+                                                                               @RequestParam(name = QUERY_PARAM_INDEX, required = false) Long index) {
         Assert.isTrue(appName != null, "service name can not be null");
         log.debug("请求注册中心服务器：{}，wait:{},index:{}", appName, wait, index);
-        return registrationService.getServiceInstancesHealth(appName, getWaitMillis(wait), index).map(item -> {
+        return registrationService.getServiceInstancesHealthOld(appName, getWaitMillis(wait), index).map(item -> {
             return createResponseEntity(item);
         });
     }
