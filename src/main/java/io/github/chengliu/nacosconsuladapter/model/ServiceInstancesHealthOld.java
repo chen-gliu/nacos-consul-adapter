@@ -10,7 +10,6 @@ import lombok.ToString;
  * @author: liucheng
  * @createTime:2022/6/21 19:22
  */
-@Builder
 @Getter
 @ToString
 public class ServiceInstancesHealthOld {
