@@ -22,15 +22,14 @@
  */
 package io.github.chengliu.nacosconsuladapter.service.impl;
 
+import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
+import com.alibaba.nacos.client.naming.NacosNamingService;
 import io.github.chengliu.nacosconsuladapter.config.NacosConsulAdapterProperties;
 import io.github.chengliu.nacosconsuladapter.model.Result;
 import io.github.chengliu.nacosconsuladapter.model.ServiceInstancesHealth;
 import io.github.chengliu.nacosconsuladapter.model.ServiceInstancesHealthOld;
 import io.github.chengliu.nacosconsuladapter.service.RegistrationService;
 import io.github.chengliu.nacosconsuladapter.utils.NacosServiceCenter;
-import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
-import com.alibaba.cloud.nacos.NacosServiceManager;
-import com.alibaba.nacos.client.naming.NacosNamingService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -41,8 +40,13 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.PreDestroy;
 import java.time.Duration;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -57,13 +61,12 @@ public class LongPollingRegistrationService implements RegistrationService, Appl
     private NacosConsulAdapterProperties nacosConsulAdapterProperties;
     private DiscoveryClient discoveryClient;
     private ScheduledExecutorService executorService;
-    private NacosServiceManager nacosServiceManager;
     private NacosDiscoveryProperties nacosDiscoveryProperties;
     private NacosNamingService namingService;
 
 
     public LongPollingRegistrationService(NacosConsulAdapterProperties nacosConsulAdapterProperties,
-                                          DiscoveryClient discoveryClient, NacosServiceManager nacosServiceManager,
+                                          DiscoveryClient discoveryClient,
                                           NacosDiscoveryProperties nacosDiscoveryProperties) {
         this.nacosConsulAdapterProperties = nacosConsulAdapterProperties;
         this.discoveryClient = discoveryClient;
@@ -73,9 +76,8 @@ public class LongPollingRegistrationService implements RegistrationService, Appl
             t.setDaemon(true);
             return t;
         });
-        this.nacosServiceManager = nacosServiceManager;
         this.nacosDiscoveryProperties = nacosDiscoveryProperties;
-        namingService = (NacosNamingService) nacosServiceManager.getNamingService(nacosDiscoveryProperties.getNacosProperties());
+        namingService = (NacosNamingService) nacosDiscoveryProperties.namingServiceInstance();
         nacosServiceCenter = new NacosServiceCenter(namingService, nacosDiscoveryProperties);
     }
 

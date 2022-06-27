@@ -10,7 +10,7 @@
     </parent>
     <groupId>io.github.chen-gliu</groupId>
     <artifactId>nacos-consul-adapter</artifactId>
-    <version>0.0.5.M</version>
+    <version>0.0.5.M-2.2.0.RELEASE</version>
     <name>nacos-consul-adapter</name>
     <url>https://github.com/chen-gliu/nacos-consul-adapter</url>
     <description>适配nacos使用promethues consul</description>
@@ -44,12 +44,26 @@
             <artifactId>spring-boot-starter-webflux</artifactId>
             <optional>true</optional>
         </dependency>
+
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-            <version>2.2.4.RELEASE</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba.nacos</groupId>
+                    <artifactId>nacos-client</artifactId>
+                </exclusion>
+            </exclusions>
+            <version>2.2.0.RELEASE</version>
             <optional>true</optional>
         </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>nacos-client</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>

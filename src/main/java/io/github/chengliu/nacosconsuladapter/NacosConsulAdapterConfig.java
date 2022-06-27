@@ -22,14 +22,13 @@
  */
 package io.github.chengliu.nacosconsuladapter;
 
+import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
 import io.github.chengliu.nacosconsuladapter.config.NacosConsulAdapterProperties;
 import io.github.chengliu.nacosconsuladapter.controller.AgentController;
 import io.github.chengliu.nacosconsuladapter.controller.ServiceController;
 import io.github.chengliu.nacosconsuladapter.service.RegistrationService;
 import io.github.chengliu.nacosconsuladapter.service.impl.DirectRegistrationService;
 import io.github.chengliu.nacosconsuladapter.service.impl.LongPollingRegistrationService;
-import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
-import com.alibaba.cloud.nacos.NacosServiceManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -56,14 +55,14 @@ public class NacosConsulAdapterConfig {
 
     @Bean
     public RegistrationService registrationService(NacosConsulAdapterProperties nacosConsulAdapterProperties,
-                                                   DiscoveryClient discoveryClient, NacosServiceManager nacosServiceManager,
+                                                   DiscoveryClient discoveryClient,
                                                    NacosDiscoveryProperties nacosDiscoveryProperties, ReactiveDiscoveryClient reactiveDiscoveryClient) {
         if (NacosConsulAdapterProperties.DIRECT_MODE.equals(nacosConsulAdapterProperties.getMode())) {
             log.info("使用直接查询模式");
             return new DirectRegistrationService(reactiveDiscoveryClient);
         }
         log.info("使用长轮询模式");
-        return new LongPollingRegistrationService(nacosConsulAdapterProperties, discoveryClient, nacosServiceManager, nacosDiscoveryProperties);
+        return new LongPollingRegistrationService(nacosConsulAdapterProperties, discoveryClient, nacosDiscoveryProperties);
     }
 
 
