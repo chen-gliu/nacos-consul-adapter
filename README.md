@@ -29,6 +29,15 @@ spring-boot 2.3+
 较低版本Spring Boot未做测试
 
 
+## 分支版本对应关系
+项目维护了适配`spring-cloud-starter-alibaba-nacos-discovery`的低版本分支, 关系如下。
+
+|          分支           | spring-cloud-starter-alibaba-nacos-discovery | nacos  |
+|:---------------------:|----------------------------------------------|--------|
+|        0.0.5.M        | 2.2+                                         | 1.4.1+ |
+| 0.0.5.M-2.2.0.RELEASE | 2.2.0.RELEASE                                | 1.2.1+ |
+
+
 
 ## 快速开始  
 可以在Spring Cloud Gateway中引入下面的jar包（可以是服务中任意的节点，在Spring Cloud Gateway中原因是，它基于Reactor。如果不是使用Spring WebFlux则还需要引入额外的包），然后在Prometheus中配置Spring Cloud Gateway的一个实例的ip地址就可以了。
